@@ -1,7 +1,7 @@
 {
   lib,
   stdenv,
-  fetchFromGitLab,
+  fetchurl,
   appstream,
   blueprint-compiler,
   desktop-file-utils,
@@ -13,19 +13,15 @@
   pkg-config,
   typescript,
   wrapGAppsHook4,
-  nix-update-script,
+  gnome,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "decibels";
   version = "48.0";
 
-  src = fetchFromGitLab {
-    domain = "gitlab.gnome.org";
-    owner = "GNOME";
-    repo = "decibels";
-    tag = finalAttrs.version;
-    hash = "sha256-qtKiKfcxGLuV1bE3lb7l4s+reZRJXcjlV35M8eZmvHc=";
-    fetchSubmodules = true;
+  src = fetchurl {
+    url = "mirror://gnome/sources/decibels/${lib.versions.major finalAttrs.version}/decibels-${finalAttrs.version}.tar.xz";
+    hash = "sha256-IpsRqSYxR7y4w+If8NSvZZ+yYmL4rs5Uetz4xl4DH3Q=";
   };
 
   nativeBuildInputs = [
@@ -59,7 +55,9 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   passthru = {
-    updateScript = nix-update-script { };
+    updateScript = gnome.updateScript {
+      packageName = "decibels";
+    };
   };
 
   meta = {
