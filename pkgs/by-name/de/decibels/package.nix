@@ -15,16 +15,15 @@
   wrapGAppsHook4,
   nix-update-script,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "decibels";
   version = "48.0";
 
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
-    group = "GNOME";
-    owner = "Incubator";
+    owner = "GNOME";
     repo = "decibels";
-    tag = version;
+    tag = finalAttrs.version;
     hash = "sha256-qtKiKfcxGLuV1bE3lb7l4s+reZRJXcjlV35M8eZmvHc=";
     fetchSubmodules = true;
   };
@@ -65,11 +64,11 @@ stdenv.mkDerivation rec {
 
   meta = {
     description = "Play audio files";
-    homepage = "https://gitlab.gnome.org/GNOME/Incubator/decibels";
-    changelog = "https://gitlab.gnome.org/GNOME/decibels/-/blob/${version}/NEWS?ref_type=tags";
+    homepage = "https://gitlab.gnome.org/GNOME/decibels";
+    changelog = "https://gitlab.gnome.org/GNOME/decibels/-/blob/${finalAttrs.version}/NEWS?ref_type=tags";
     license = lib.licenses.gpl3Only;
-    teams = [ lib.teams.gnome-circle ];
+    teams = [ lib.teams.gnome lib.teams.gnome-circle ];
     mainProgram = "org.gnome.Decibels";
     platforms = lib.platforms.linux;
   };
-}
+})
