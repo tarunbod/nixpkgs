@@ -116,10 +116,15 @@ def requisites_to_attrs(
 def reverse_edges(graph: dict[str, set[str]]) -> dict[str, set[str]]:
     """
     Flips the edges of a directed graph.
+    Packages without any dependencies will be added to empty string node.
     """
 
     reversed_graph: dict[str, set[str]] = {}
     for dependent, dependencies in graph.items():
+        if not dependencies:
+            reversed_graph.setdefault("", set()).add(dependent)
+            continue
+
         for dependency in dependencies:
             reversed_graph.setdefault(dependency, set()).add(dependent)
 
@@ -413,6 +418,8 @@ async def populate_queue(
         ready_packages = list(sorter.get_ready())
         eprint(f"Enqueuing group of {len(ready_packages)} packages")
         for package in ready_packages:
+            if package == "":
+                continue
             await packages_to_update.put(attr_packages[package])
         await packages_to_update.join()
         sorter.done(*ready_packages)
