@@ -17,23 +17,25 @@
   wayland,
   wrapGAppsHook4,
   desktop-file-utils,
-  nix-update-script,
+  gitUpdater,
+  common-updater-scripts,
+  _experimental-update-script-combinators,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ashpd-demo";
-  version = "0.11.0";
+  version = "0.5.0";
 
   src = fetchFromGitHub {
     owner = "bilelmoussaoui";
     repo = "ashpd";
-    tag = finalAttrs.version;
-    hash = "sha256-zWxkI5Cq+taIkJ27qsVMslcFr6EqfxstQm9YvvSj3so=";
+    rev = "${finalAttrs.version}-demo";
+    hash = "sha256-0IGqA8PM6I2p4/MrptkdSWIZThMoeaMsdMc6tVTI2MU=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     src = "${finalAttrs.src}/ashpd-demo";
-    hash = "sha256-eGFz3wWXXLhDesVU9yqj/fAX46RN6FxHFqhKwvr4C24=";
+    hash = "sha256-kUEzVBk8dKXCQdHFJJS633CBG1F57TIxJg1xApMwzbI=";
   };
 
   nativeBuildInputs = [
@@ -65,7 +67,34 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   passthru = {
-    updateScript = nix-update-script { };
+    updateScript =
+      let
+        updateSource = gitUpdater {
+          url = finalAttrs.src.gitRepoUrl;
+          rev-suffix = "-demo";
+        };
+
+        updateLockfile = {
+          command = [
+            "sh"
+            "-c"
+            ''
+              PATH=${
+                lib.makeBinPath [
+                  common-updater-scripts
+                ]
+              }
+              update-source-version ashpd-demo --ignore-same-version --source-key=cargoDeps.vendorStaging > /dev/null
+            ''
+          ];
+          # Experimental feature: do not copy!
+          supportedFeatures = [ "silent" ];
+        };
+      in
+      _experimental-update-script-combinators.sequence [
+        updateSource
+        updateLockfile
+      ];
   };
 
   meta = with lib; {
