@@ -51,7 +51,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "librsvg";
-  version = "2.59.2";
+  version = "2.60.0";
 
   outputs =
     [
@@ -64,7 +64,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   src = fetchurl {
     url = "mirror://gnome/sources/librsvg/${lib.versions.majorMinor finalAttrs.version}/librsvg-${finalAttrs.version}.tar.xz";
-    hash = "sha256-7NKT+wzDOMFwFxu8e8++pnJdBByV8xOF3JNUCZM+RZc=";
+    hash = "sha256-C2/8zfbnCvyYdogvXSzp/88scTy6rxrZAXDap1Lh7sM=";
   };
 
   patches = [
@@ -96,7 +96,7 @@ stdenv.mkDerivation (finalAttrs: {
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit (finalAttrs) src;
     name = "librsvg-deps-${finalAttrs.version}";
-    hash = "sha256-M8iNNWpYgLIm0X3sTjAaRIFYLIHnMyrkcsayFrLg25Y=";
+    hash = "sha256-DMkYsskjw6ARQsaHDRautT0oy8VqW/BJBfBVErxUe88=";
     dontConfigure = true;
   };
 
