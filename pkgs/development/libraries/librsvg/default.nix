@@ -148,11 +148,6 @@ stdenv.mkDerivation (finalAttrs: {
     # Fix thumbnailer path
     substituteInPlace gdk-pixbuf-loader/librsvg.thumbnailer.in \
       --replace-fail '@bindir@/gdk-pixbuf-thumbnailer' '${gdk-pixbuf}/bin/gdk-pixbuf-thumbnailer'
-
-    # Fix pkg-config file Requires section.
-    # https://gitlab.gnome.org/GNOME/librsvg/-/issues/1150
-    substituteInPlace rsvg/meson.build \
-      --replace-fail 'requires: library_dependencies_sole,' 'requires: [cairo_dep, gio_dep, glib_dep, pixbuf_dep],'
   '';
 
   preCheck = ''
