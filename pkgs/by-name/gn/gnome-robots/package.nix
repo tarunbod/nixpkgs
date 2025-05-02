@@ -62,12 +62,6 @@ stdenv.mkDerivation (finalAttrs: {
     gst_all_1.gst-plugins-good
   ];
 
-  postPatch = ''
-    # https://gitlab.gnome.org/GNOME/gnome-robots/-/merge_requests/38
-    substituteInPlace data/icons/meson.build \
-      --replace-fail 'gtk-update-icon-cache' 'gtk4-update-icon-cache'
-  '';
-
   preFixup = ''
     # Seal GStreamer plug-ins so that we can notice when they are missing.
     gappsWrapperArgs+=(--set "GST_PLUGIN_SYSTEM_PATH_1_0" "$GST_PLUGIN_SYSTEM_PATH_1_0")
