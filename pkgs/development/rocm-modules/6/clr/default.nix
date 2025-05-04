@@ -237,6 +237,8 @@ stdenv.mkDerivation (finalAttrs: {
         "1100"
         "1101"
         "1102"
+        "1200"
+        "1201"
       ] (target: "gfx${target}");
 
       inherit hipClangPath;
